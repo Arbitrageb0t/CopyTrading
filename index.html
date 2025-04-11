@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Copy Trading Simulator</title>
+  <style>
+    body { font-family: Arial; text-align: center; padding: 50px; background: #f4f4f4; }
+    button { padding: 12px 25px; font-size: 16px; margin: 10px; cursor: pointer; }
+    .portfolio, .profit, .wallet, .status { margin-top: 20px; font-size: 18px; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <h1>Copy Trading Simulator</h1>
+
+  <button onclick="startCopying()">Copy Trading</button>
+  <button onclick="invest()">Invest to Start Copying</button>
+  <button onclick="stopCopying()">Stop Copying</button>
+  <button onclick="withdraw()">Withdraw</button>
+
+  <div class="wallet hidden" id="walletInfo">
+    Send USDT to: <strong>TX4...YOUR_USDT_ADDRESS_HERE</strong><br>
+    (TRC20 or ERC20)
+  </div>
+
+  <div class="profit" id="dailyProfit"></div>
+  <div class="portfolio" id="portfolioStatus"></div>
+  <div class="status" id="status"></div>
+
+  <script>
+    let invested = false;
+    let balance = 0;
+    let intervalId;
+    let dailyProfitPercent = 0;
+
+    function startCopying() {
+      alert("You're now copying Pro Trader: AlabiBanks\nDaily Returns: 20% - 30%");
+    }
+
+    function invest() {
+      if (!invested) {
+        invested = true;
+        balance = 100; // starting balance
+        document.getElementById("walletInfo").classList.remove("hidden");
+        document.getElementById("status").innerText = "Waiting for deposit... Simulation started anyway!";
+        updateDailyProfit();
+        intervalId = setInterval(simulateGrowth, 4000); // simulate growth every 4 seconds
+      }
+    }
+
+    function updateDailyProfit() {
+      dailyProfitPercent = (Math.random() * 10 + 20).toFixed(2); // 20% - 30%
+      document.getElementById("dailyProfit").innerText = `Today's Profit: ${dailyProfitPercent}%`;
+    }
+
+    function simulateGrowth() {
+      const profit = balance * (dailyProfitPercent / 100 / 24); // fake hourly growth
+      balance += profit;
+      document.getElementById("portfolioStatus").innerText = `Fake Balance: $${balance.toFixed(2)}`;
+    }
+
+    function stopCopying() {
+      if (invested) {
+        clearInterval(intervalId);
+        document.getElementById("status").innerText = "Copying stopped.";
+      }
+    }
+
+    function withdraw() {
+      if (invested) {
+        document.getElementById("status").innerText = `Withdrawal requested. Transferring $${balance.toFixed(2)}...`;
+      } else {
+        document.getElementById("status").innerText = "You haven't started copying yet.";
+      }
+    }
+
+    // Update profit once every simulated "day" (20s for demo)
+    setInterval(updateDailyProfit, 20000);
+  </script>
+</body>
+</html>
