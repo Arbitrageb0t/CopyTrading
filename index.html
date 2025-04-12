@@ -26,8 +26,8 @@
       position: absolute;
       bottom: 10px;
       left: 10px;
-      font-size: 16px;
-      font-weight: bold;
+      font-size: 20px;
+      font-weight: 900;
       color: #2ecc71;
       font-family: 'Comic Sans MS', cursive;
     }
@@ -84,6 +84,8 @@
     let balance = 0;
     let intervalId;
     let dailyProfitPercent = 0;
+    let profitMadePercent = 0;
+    let initialInvestment = 0;
 
     function startCopying() {
       alert("You're now copying Pro Trader: AlabiBanks\nDaily Returns: 20% - 30%");
@@ -92,16 +94,22 @@
     function invest() {
       if (!invested) {
         invested = true;
-        balance = 100;
+        balance = 0;
+        initialInvestment = 100; // simulate $100 investment after deposit
         document.getElementById("walletInfo").classList.remove("hidden");
         document.getElementById("status").innerText = "Deposit address generated. Trading session started.";
         updateDailyProfit();
+        setTimeout(() => {
+          balance = initialInvestment;
+          document.getElementById("portfolioStatus").innerText = `Balance: $${balance.toFixed(2)}`;
+        }, 3000); // simulate 3s deposit confirmation
         intervalId = setInterval(simulateGrowth, 4000);
       }
     }
 
     function updateDailyProfit() {
       dailyProfitPercent = (Math.random() * 10 + 20).toFixed(2);
+      profitMadePercent = dailyProfitPercent;
       document.getElementById("dailyProfit").innerText = `Today's Profit: ${dailyProfitPercent}%`;
     }
 
@@ -119,10 +127,27 @@
     }
 
     function withdraw() {
-      if (invested) {
-        document.getElementById("status").innerText = `Withdrawal request submitted. Transferring $${balance.toFixed(2)} to your wallet...`;
-      } else {
+      if (invested && balance > 0) {
+        const amount = prompt("Enter amount to withdraw (Available: $" + balance.toFixed(2) + "):");
+        const address = prompt("Enter your withdrawal address:");
+        const userProfit = ((balance - initialInvestment) / initialInvestment * 100).toFixed(2);
+
+        if (amount && address) {
+          if (parseFloat(amount) > balance) {
+            document.getElementById("status").innerText = "Error: Insufficient balance.";
+          } else {
+            document.getElementById("status").innerText =
+              `AlabiBanks has made ${profitMadePercent}% today.\n` +
+              `Your profit: ${userProfit}%\n` +
+              `Withdrawing $${parseFloat(amount).toFixed(2)} to ${address}...`;
+          }
+        } else {
+          document.getElementById("status").innerText = "Withdrawal cancelled or incomplete.";
+        }
+      } else if (!invested) {
         document.getElementById("status").innerText = "You haven't started copying yet.";
+      } else {
+        document.getElementById("status").innerText = "Your balance is $0. Deposit first to start copying.";
       }
     }
 
